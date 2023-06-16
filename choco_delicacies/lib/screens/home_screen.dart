@@ -1,5 +1,7 @@
 import 'package:card_swiper/card_swiper.dart';
 import 'package:choco_delicacies/consts/global_colors.dart';
+import 'package:choco_delicacies/screens/categories_screen.dart';
+import 'package:choco_delicacies/screens/user_screen.dart';
 import 'package:choco_delicacies/widgets/appbar_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -45,12 +47,28 @@ class _HomeScreenState extends State<HomeScreen> {
             elevation: 4,
             title: const Text('Home'),
             leading: AppBarIcons(
-              function: () {},
+              function: () {
+                Navigator.push(
+                  context,
+                  PageTransition(
+                    type: PageTransitionType.fade,
+                    child: const CategoryScreen(),
+                  ),
+                );
+              },
               icon: CupertinoIcons.cart,
             ),
             actions: [
               AppBarIcons(
-                function: () {},
+                function: () {
+                  Navigator.push(
+                  context,
+                  PageTransition(
+                    type: PageTransitionType.fade,
+                    child: const UsersScreen(),
+                  ),
+                );
+                },
                 icon: CupertinoIcons.gear,
               ),
             ],
