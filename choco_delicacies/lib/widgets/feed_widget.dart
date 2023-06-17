@@ -1,18 +1,21 @@
+import 'package:choco_delicacies/widgets/product_details.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:provider/provider.dart';
 
 import '../consts/global_colors.dart';
+import '../models/products_model.dart';
 import '../screens/details_screen.dart';
 
 class FeedsWidget extends StatelessWidget {
-  const FeedsWidget({Key? key}) : super(key: key);
+  const FeedsWidget({Key? key, }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // final productsModelProvider = Provider.of<ProductsModel>(context);
-
+    final productsModelProvider = Provider.of<ProductsModel>(context);
+    
     Size size = MediaQuery.of(context).size;
     return Padding(
       padding: const EdgeInsets.all(2.0),
@@ -26,8 +29,8 @@ class FeedsWidget extends StatelessWidget {
               context,
               PageTransition(
                 type: PageTransitionType.fade,
-                // child: ProductDetails(id: productsModelProvider.id.toString(),),
-                child: const DetailsScreen(),
+                // child: ProductDetails(id: productsModelProvider.productId.toString(),),
+                child:  DetailsScreen(id:productsModelProvider.productId.toString()),
               ),
             );
           },
@@ -48,7 +51,7 @@ class FeedsWidget extends StatelessWidget {
                             children: <TextSpan>[
                               TextSpan(
                                   // text: "${productsModelProvider.price}",
-                                  text:" 200.0",
+                                  text:"${productsModelProvider.price}",
                                   style: TextStyle(
                                       color: lightTextColor,
                                       fontWeight: FontWeight.w600)),
@@ -64,7 +67,7 @@ class FeedsWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
                 child: Image.asset(
                   height: size.height * 0.2,
-                  "assets/images/choco.png",
+                  productsModelProvider.productImageURL.toString(),
                   width: double.infinity,
                   fit: BoxFit.fill,
 
@@ -77,18 +80,18 @@ class FeedsWidget extends StatelessWidget {
                 //     color: Colors.red,
                 //     size: 28,
                 //   ),
-                //   imageUrl: "https://assets.bonappetit.com/photos/5ca534485e96521ff23b382b/1:1/w_1920,c_limit/chocolate-chip-cookie.jpg",
+                //   imageUrl: productsModelProvider.productImageURL.toString(),
                 //   boxFit: BoxFit.fill,
                 // ),
               ),
               const SizedBox(height: 5),
-             const Padding(
-                padding:  EdgeInsets.only(left: 2, right: 2, top: 3),
-                child:  Text(
-                  "Chocolate Cookies",
+              Padding(
+                padding:  const EdgeInsets.only(left: 2, right: 2, top: 3),
+                child: Text(
+                  productsModelProvider.productTitle.toString(),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
-                  style:  TextStyle(
+                  style:const TextStyle(
                     fontSize: 16,
                     fontFamily: 'Roboto',
                     fontWeight: FontWeight.w700,

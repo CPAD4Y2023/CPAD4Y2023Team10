@@ -2,8 +2,10 @@ import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:provider/provider.dart';
 
 import '../consts/global_colors.dart';
+import '../models/users_model.dart';
 
 class UsersWidget extends StatelessWidget {
   const UsersWidget({Key? key}) : super(key: key);
@@ -11,7 +13,7 @@ class UsersWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    // final usersModelProvider = Provider.of<UsersModel>(context);
+    final usersModelProvider = Provider.of<UsersModel>(context);
 
     return Container(
         color: lightBackgroundColor,
@@ -41,12 +43,12 @@ class UsersWidget extends StatelessWidget {
           //   boxFit: BoxFit.fill,
           // ),
           // title: Text(usersModelProvider.name.toString()),
-          title: const Text("User Name", style: TextStyle(fontSize: 28),),
+          title:  Text(usersModelProvider.name.toString() , style: const TextStyle(fontSize: 28),),
           // subtitle: Text(usersModelProvider.email.toString()),
-          subtitle: const Text("username@mail.com", style: TextStyle(fontSize: 18)),
+          subtitle:  Text(usersModelProvider.email.toString(), style: const TextStyle(fontSize: 18)),
           trailing: Text(
             // usersModelProvider.role.toString(),
-            "User",
+            usersModelProvider.role.toString(),
             style: TextStyle(
               color: lightIconsColor,
               fontWeight: FontWeight.bold,
