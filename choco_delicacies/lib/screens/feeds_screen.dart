@@ -1,10 +1,32 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../models/products_model.dart';
+import '../services/api_handler.dart';
 import '../widgets/feed_widget.dart';
 
-class FeedsScreen extends StatelessWidget{
+class FeedsScreen extends StatefulWidget {
   const FeedsScreen({Key? key}) : super(key: key);
+
+  @override
+  State<FeedsScreen> createState() => _FeedsScreenState();
+}
+
+class _FeedsScreenState extends State<FeedsScreen>{
+   List<ProductsModel> productsList = [];
+   @override
+  void didChangeDependencies() {
+    getProducts();
+    super.didChangeDependencies();
+  }
+
+  Future<void> getProducts() async{
+    productsList = await APIHandler.getAllProducts();
+    setState(() {
+      
+    });
+  }
    @override
    Widget build(BuildContext context){
     return Scaffold(
@@ -12,13 +34,11 @@ class FeedsScreen extends StatelessWidget{
         // elevation: 4,
         title: const Text('All Products'),
       ),
-      body:
-      SingleChildScrollView(
-        child:Column(children: [
+      body: productsList.isEmpty? const Center(child: CircularProgressIndicator(),):
           GridView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: 7,
+                            // shrinkWrap: true,
+                            // physics: const NeverScrollableScrollPhysics(),
+                            itemCount: productsList.length,
                             gridDelegate:
                                 const SliverGridDelegateWithMaxCrossAxisExtent(
                                     maxCrossAxisExtent: 190,
@@ -26,10 +46,14 @@ class FeedsScreen extends StatelessWidget{
                                     mainAxisSpacing: 11,
                                     childAspectRatio: 0.75),
                             itemBuilder: (ctx, index) {
-                              return const FeedsWidget();
+                             return ChangeNotifierProvider.value(
+                                value: productsList[index],
+                                child:const FeedsWidget(),
+                              );
+                                
+                              
                             })
-        ],)
-      ),
+        
       
     );
    }

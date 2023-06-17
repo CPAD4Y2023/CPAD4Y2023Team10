@@ -3,20 +3,45 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../consts/global_colors.dart';
+import '../models/products_model.dart';
+import '../services/api_handler.dart';
 import '../widgets/product_body.dart';
 
-class DetailsScreen extends StatelessWidget{
-  const DetailsScreen({Key? key}) : super(key: key);
+class DetailsScreen extends StatefulWidget {
+  const DetailsScreen({
+    Key? key,
+    required this.id,
+  }) : super(key: key);
+  final String id;
+  @override
+  State<DetailsScreen> createState() => _ProductDetailsState();
+}
+
+class _ProductDetailsState extends State<DetailsScreen> {
+
+   final titleStyle = const TextStyle(fontSize: 24, fontWeight: FontWeight.bold);
+  ProductsModel? productsModel; 
+   Future<void> getProductInfo() async {
+    productsModel = await APIHandler.getProductById(id: widget.id);
+     setState(() {});
+   }
+
+    @override
+  void didChangeDependencies() {
+    getProductInfo();
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context){
     return Scaffold(
       backgroundColor: lightBackgroundColor,
       appBar: buildAppBar(context),
-      body: const ProductBody(),
+      body: ProductBody(id: widget.id),
     );
   }
 
-AppBar buildAppBar(BuildContext context){
+  AppBar buildAppBar(BuildContext context){
   return AppBar(
     backgroundColor: lightBackgroundColor,
     elevation: 0,
@@ -40,5 +65,6 @@ AppBar buildAppBar(BuildContext context){
       ],
   );
   
+
 }
 }

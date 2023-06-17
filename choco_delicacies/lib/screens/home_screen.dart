@@ -2,7 +2,9 @@ import 'package:card_swiper/card_swiper.dart';
 import 'package:choco_delicacies/consts/global_colors.dart';
 import 'package:choco_delicacies/screens/categories_screen.dart';
 import 'package:choco_delicacies/screens/user_screen.dart';
+import 'package:choco_delicacies/services/api_handler.dart';
 import 'package:choco_delicacies/widgets/appbar_icons.dart';
+import 'package:choco_delicacies/widgets/feeds_grid.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
@@ -10,6 +12,7 @@ import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:responsive_grid_list/responsive_grid_list.dart';
 
+import '../models/products_model.dart';
 import '../widgets/carousel.dart';
 import '../widgets/feed_widget.dart';
 import 'feeds_screen.dart';
@@ -23,6 +26,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late TextEditingController _textEditingController;
+  List<ProductsModel> productsList = [];
   @override
   void initState() {
     _textEditingController = TextEditingController();
@@ -34,6 +38,19 @@ class _HomeScreenState extends State<HomeScreen> {
     _textEditingController.dispose();
     super.dispose();
   }
+
+  // @override
+  // void didChangeDependencies() {
+  //   getProducts();
+  //   super.didChangeDependencies();
+  // }
+
+  // Future<void> getProducts() async{
+  //   productsList = await APIHandler.getAllProducts();
+  //   setState(() {
+      
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -153,20 +170,28 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                       ),
-                    SizedBox(
-                        child: GridView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: 7,
-                            gridDelegate:
-                                const SliverGridDelegateWithMaxCrossAxisExtent(
-                                    maxCrossAxisExtent: 180,
-                                    crossAxisSpacing: 11,
-                                    mainAxisSpacing: 11,
-                                    childAspectRatio: 0.75),
-                            itemBuilder: (ctx, index) {
-                              return const FeedsWidget();
-                            }))
+                    // productsList.isEmpty? Container() : FeedsGridWidget(productsList: productsList),
+                     FutureBuilder<List<ProductsModel>>(
+                          future: APIHandler.getAllProducts(),
+                          builder: ((context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            } else if (snapshot.hasError) {
+                              Center(
+                                child:
+                                    Text("An error occured ${snapshot.error}"),
+                              );
+                            } else if (snapshot.data == null) {
+                              const Center(
+                                child: Text("No products has been added yet"),
+                              );
+                            }
+                            return FeedsGridWidget(
+                                productsList: snapshot.data!);
+                          }))
                   ],
                 ))),
                 // Flexible(
